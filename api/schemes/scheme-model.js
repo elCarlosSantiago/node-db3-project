@@ -1,3 +1,5 @@
+const db = require('../../data/db-config.js');
+
 function find() { // EXERCISE A
   /*
     1A- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`.
@@ -121,7 +123,6 @@ function addStep(scheme_id, step) { // EXERCISE E
     including the newly created one.
   */
 }
-
 module.exports = {
   find,
   findById,
