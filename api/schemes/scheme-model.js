@@ -32,20 +32,24 @@ async function findById(scheme_id) {
     .where('sc.scheme_id', scheme_id)
     .orderBy('st.step_number');
 
-  let formattedScheme = {
-    scheme_id: parseInt(scheme_id),
-    scheme_name: schemeInfo[0].scheme_name,
-    steps: !schemeInfo[0].step_id
-      ? []
-      : schemeInfo.map((scheme) => {
-          return {
-            step_id: scheme.step_id,
-            step_number: scheme.step_number,
-            instructions: scheme.instructions,
-          };
-        }),
-  };
-  return formattedScheme;
+  if (schemeInfo?.length > 0) {
+    let formattedScheme = {
+      scheme_id: parseInt(scheme_id),
+      scheme_name: schemeInfo[0].scheme_name,
+      steps: !schemeInfo[0].step_id
+        ? []
+        : schemeInfo.map((scheme) => {
+            return {
+              step_id: scheme.step_id,
+              step_number: scheme.step_number,
+              instructions: scheme.instructions,
+            };
+          }),
+    };
+    return formattedScheme;
+  } else {
+    return null;
+  }
 
   // EXERCISE B
   /*
@@ -116,6 +120,11 @@ async function findById(scheme_id) {
 }
 
 function findSteps(scheme_id) {
+  return db('steps as st')
+    .leftJoin('schemes as sc', 'st.scheme_id', 'sc.scheme_id')
+    .select('st.step_id', 'st.step_number', 'st.instructions', 'sc.scheme_name')
+    .where('st.scheme_id', scheme_id)
+    .orderBy('st.step_number');
   // EXERCISE C
   /*
     1C- Build a query in Knex that returns the following data.
@@ -139,11 +148,13 @@ function findSteps(scheme_id) {
   */
 }
 
-function add(scheme) {
+async function add(scheme) {
   // EXERCISE D
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
+  const [scheme_id] = await db('schemes').insert(scheme, ['scheme_id']);
+  return findById(scheme_id);
 }
 
 function addStep(scheme_id, step) {
