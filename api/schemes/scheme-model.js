@@ -55,7 +55,7 @@ async function addStep(scheme_id, step) {
     scheme_id: scheme_id,
   };
 
-  await db('steps').insert(stepToSend, ['scheme_id']);
+  await db('steps').insert(stepToSend);
   return db('steps').where('steps.scheme_id', scheme_id).orderBy('steps.step_number');
 }
 
