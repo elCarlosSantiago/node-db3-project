@@ -44,7 +44,7 @@ function findSteps(scheme_id) {
 }
 
 async function add(scheme) {
-  const [scheme_id] = await db('schemes').insert(scheme, ['scheme_id']);
+  const [scheme_id] = await db('schemes').insert(scheme);
   return findById(scheme_id);
 }
 
