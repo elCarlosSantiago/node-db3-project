@@ -157,13 +157,20 @@ async function add(scheme) {
   return findById(scheme_id);
 }
 
-function addStep(scheme_id, step) {
+async function addStep(scheme_id, step) {
+  let stepToSend = {
+    instructions: step.instructions,
+    step_number: step.step_number,
+    scheme_id: scheme_id,
+  };
   // EXERCISE E
   /*
     1E- This function adds a step to the scheme with the given `scheme_id`
     and resolves to _all the steps_ belonging to the given `scheme_id`,
     including the newly created one.
   */
+  await db('steps').insert(stepToSend, ['scheme_id']);
+  return db('steps').where('steps.scheme_id', scheme_id).orderBy('steps.step_number');
 }
 module.exports = {
   find,
